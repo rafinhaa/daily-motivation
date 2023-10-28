@@ -3,18 +3,22 @@ import { Motivation } from "@motivation/enterprise/entities/motivation";
 
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
-export interface CreateNewMotivationRequest {
+export interface CreateMotivationRequest {
   authorId: string;
   content: string;
 }
 
-export class CreateNewMotivation {
+interface CreateMotivationResponse {
+  motivation: Motivation;
+}
+
+export class CreateMotivationUseCase {
   constructor(private motivationRepository: MotivationRepository) {}
 
   async execute({
     authorId,
     content,
-  }: CreateNewMotivationRequest): Promise<Motivation> {
+  }: CreateMotivationRequest): Promise<CreateMotivationResponse> {
     const motivation = Motivation.create({
       content,
       authorId: new UniqueEntityID(authorId),
@@ -22,6 +26,6 @@ export class CreateNewMotivation {
 
     await this.motivationRepository.create(motivation);
 
-    return motivation;
+    return { motivation };
   }
 }
