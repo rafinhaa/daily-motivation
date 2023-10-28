@@ -40,7 +40,7 @@ export class Motivation extends Entity<MotivationProps> {
 
   static create(
     props: Optional<MotivationProps, "createdAt">,
-    id?: UniqueEntityID
+    id?: UniqueEntityID,
   ) {
     return new Motivation({ ...props, createdAt: new Date() }, id);
   }

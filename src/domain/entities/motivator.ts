@@ -26,7 +26,7 @@ export class Motivator extends Entity<MotivatorProps> {
 
   static create(
     props: Optional<MotivatorProps, "createdAt">,
-    id?: UniqueEntityID
+    id?: UniqueEntityID,
   ) {
     return new Motivator({ ...props, createdAt: new Date() }, id);
   }

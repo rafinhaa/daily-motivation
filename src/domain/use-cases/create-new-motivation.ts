@@ -1,4 +1,5 @@
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
+
 import { Motivation } from "@domain/entities/motivation";
 import { MotivationRepository } from "@domain/repositories/motivation-repository";
 

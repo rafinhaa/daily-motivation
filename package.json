@@ -4,6 +4,9 @@
   "description": "The Daily Motivation project is an API that allows users to post short motivational texts that will be randomly organized, one per day, to inspire and motivate people. This application aims to create a space where users can share words of encouragement, positivity and inspiration with the community.",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "prettier:fix": "prettier --w ./src",
     "test": "vitest run",
     "test:watch": "vitest",
     "type:check": "tsc --noEmit"
@@ -13,7 +16,15 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.2.1",
     "@types/node": "^20.8.9",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-vitest-globals": "^1.4.0",
+    "prettier": "^3.0.3",
     "typescript": "^5.2.2",
     "vite-tsconfig-paths": "^4.2.1",
     "vitest": "^0.34.6"

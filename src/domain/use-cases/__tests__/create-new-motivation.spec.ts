@@ -1,6 +1,8 @@
-import { CreateNewMotivation } from "../create-new-motivation";
-import { MotivationRepository } from "@domain/repositories/motivation-repository";
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
+
+import { MotivationRepository } from "@domain/repositories/motivation-repository";
+
+import { CreateNewMotivation } from "../create-new-motivation";
 
 const fakeMotivationRepository: MotivationRepository = {
   create: vitest.fn(),
