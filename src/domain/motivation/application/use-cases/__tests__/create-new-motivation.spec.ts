@@ -1,6 +1,6 @@
-import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
+import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
 
-import { MotivationRepository } from "@domain/repositories/motivation-repository";
+import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
 import { CreateNewMotivation } from "../create-new-motivation";
 

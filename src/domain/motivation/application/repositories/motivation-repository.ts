@@ -1,4 +1,4 @@
-import { Motivation } from "@domain/entities/motivation";
+import { Motivation } from "@motivation/enterprise/entities/motivation";
 
 export interface MotivationRepository {
   create(motivation: Motivation): Promise<void>;

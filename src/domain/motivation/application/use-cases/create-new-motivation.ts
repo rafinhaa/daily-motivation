@@ -1,7 +1,7 @@
-import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
+import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
+import { Motivation } from "@motivation/enterprise/entities/motivation";
 
-import { Motivation } from "@domain/entities/motivation";
-import { MotivationRepository } from "@domain/repositories/motivation-repository";
+import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
 export interface CreateNewMotivationRequest {
   authorId: string;

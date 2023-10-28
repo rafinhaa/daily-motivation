@@ -1,7 +1,7 @@
-import { Entity } from "../../core/entities/entity";
-import { DateAt } from "../../core/types/date-at";
-import { Optional } from "../../core/types/optional";
-import { UniqueEntityID } from "../../core/value-objects/unique-entity-id";
+import { Entity } from "@core/entities/entity";
+import { DateAt } from "@core/types/date-at";
+import { Optional } from "@core/types/optional";
+import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
 export interface MotivationProps extends DateAt {
   content: string;
