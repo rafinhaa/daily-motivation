@@ -1,4 +1,4 @@
-import { Motivation } from "@motivation/enterprise/entities/motivation";
+import { makeMotivation } from "@tests/factories/make-motivation";
 import { InMemoryMotivationRepository } from "@tests/repositories/in-memory-motivation-repository";
 
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
@@ -15,11 +15,9 @@ describe("GetMotivationByIdUseCase", () => {
   });
 
   it("should be able to get by id a motivation", async () => {
-    const newMotivation = Motivation.create({
-      content: "motivation",
-      authorId: new UniqueEntityID("authorId"),
-      createdAt: new Date(),
-    });
+    const newMotivation = makeMotivation();
+
+    console.log(newMotivation);
 
     await inMemoryMotivationRepository.create(newMotivation);
 
