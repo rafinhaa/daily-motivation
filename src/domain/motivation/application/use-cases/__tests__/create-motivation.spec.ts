@@ -22,7 +22,7 @@ describe("CreateMotivationUseCase", () => {
       content,
     });
 
-    expect(motivation.id).toEqual(expect.any(String));
+    expect(motivation.id).toBeInstanceOf(UniqueEntityID);
     expect(motivation.content).toEqual(content);
     expect(motivation.authorId).toEqual(new UniqueEntityID(authorId));
   });

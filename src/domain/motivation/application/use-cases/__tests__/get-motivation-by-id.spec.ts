@@ -17,8 +17,6 @@ describe("GetMotivationByIdUseCase", () => {
   it("should be able to get by id a motivation", async () => {
     const newMotivation = makeMotivation();
 
-    console.log(newMotivation);
-
     await inMemoryMotivationRepository.create(newMotivation);
 
     const { motivation } = await sut.execute({
@@ -29,7 +27,7 @@ describe("GetMotivationByIdUseCase", () => {
       throw new Error("Motivation not found");
     }
 
-    expect(motivation.id).toEqual(expect.any(String));
+    expect(motivation.id).toEqual(newMotivation.id);
     expect(motivation.content).toEqual(newMotivation.content);
     expect(motivation.authorId).toEqual(
       new UniqueEntityID(newMotivation.authorId.toString()),
