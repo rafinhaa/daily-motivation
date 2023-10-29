@@ -1,6 +1,8 @@
 import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
 import { Motivation } from "@motivation/enterprise/entities/motivation";
 
+import { FetchDataParams } from "@core/types/fetch-data";
+
 export class InMemoryMotivationRepository implements MotivationRepository {
   private motivations: Motivation[] = [];
 
@@ -28,5 +30,16 @@ export class InMemoryMotivationRepository implements MotivationRepository {
       (item) => item.id === motivation.id,
     );
     this.motivations[motivationIndex] = motivation;
+  }
+
+  async findManyRecent(
+    params: Required<FetchDataParams>,
+  ): Promise<Motivation[]> {
+    return this.motivations
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      .slice(
+        (params.page - 1) * params.limitPerPage,
+        params.page * params.limitPerPage,
+      );
   }
 }
