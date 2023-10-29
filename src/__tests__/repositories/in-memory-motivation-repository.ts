@@ -22,4 +22,11 @@ export class InMemoryMotivationRepository implements MotivationRepository {
     );
     this.motivations.splice(motivationIndex, 1);
   }
+
+  async save(motivation: Motivation): Promise<void> {
+    const motivationIndex = this.motivations.findIndex(
+      (item) => item.id === motivation.id,
+    );
+    this.motivations[motivationIndex] = motivation;
+  }
 }
