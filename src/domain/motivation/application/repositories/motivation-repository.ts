@@ -8,8 +8,8 @@ export interface MotivationRepository {
   delete(motivation: Motivation): Promise<void>;
   save(motivation: Motivation): Promise<void>;
   findManyRecent(params: Required<FetchDataParams>): Promise<Motivation[]>;
-  findByAuthorId(
+  findManyRecentByAuthorId(
     authorId: string,
     params: Required<FetchDataParams>,
-  ): Promise<Motivation[] | null>;
+  ): Promise<Motivation[]>;
 }

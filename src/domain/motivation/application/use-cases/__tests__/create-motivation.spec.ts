@@ -48,13 +48,14 @@ describe("CreateMotivationUseCase", () => {
       ),
     ]);
 
-    const motivations = await inMemoryMotivationRepository.findByAuthorId(
-      motivationalParticipant.id.toString(),
-      {
-        page: 1,
-        limitPerPage: manyMotivations,
-      },
-    );
+    const motivations =
+      await inMemoryMotivationRepository.findManyRecentByAuthorId(
+        motivationalParticipant.id.toString(),
+        {
+          page: 1,
+          limitPerPage: manyMotivations,
+        },
+      );
 
     expect(motivations).toHaveLength(manyMotivations);
   });

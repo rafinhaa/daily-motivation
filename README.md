@@ -19,3 +19,6 @@
 - [x] Um participante motivacional pode olhar as motivações recentes
       -- [x] Um participante motivacional pode personalizar a quantidade de motivações na listagem
       -- [ ] Um participante motivacional deve saber quantas páginas tem no total
+- [x] Um participante motivacional pode olhar as suas motivações recentes
+      -- [x] Um participante motivacional pode personalizar a quantidade de motivações na listagem
+      -- [ ] Um participante motivacional deve saber quantas páginas tem no total
