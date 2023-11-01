@@ -1,4 +1,5 @@
 import { makeMotivation } from "@tests/factories/make-motivation";
+import { makeMotivationalParticipant } from "@tests/factories/make-motivational-participant";
 import { InMemoryMotivationRepository } from "@tests/repositories/in-memory-motivation-repository";
 
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
@@ -15,18 +16,18 @@ describe("EditMotivationUseCase", () => {
   });
 
   it("should be able to edit by id a motivation", async () => {
-    const authorId = new UniqueEntityID();
+    const motivationalParticipant = makeMotivationalParticipant();
     const newMotivation = makeMotivation({
-      authorId,
+      authorId: motivationalParticipant.id,
     });
 
     await inMemoryMotivationRepository.create(newMotivation);
 
-    const newContent = "new content";
+    const newContent = makeMotivation().content;
 
     await expect(
       sut.execute({
-        authorId: authorId.toString(),
+        authorId: motivationalParticipant.id.toString(),
         motivationId: newMotivation.id.toString(),
         content: newContent,
       }),
@@ -42,7 +43,7 @@ describe("EditMotivationUseCase", () => {
 
     expect(updatedMotivation).toMatchObject({
       content: newContent,
-      authorId,
+      authorId: motivationalParticipant.id,
       updatedAt: expect.any(Date),
     });
   });

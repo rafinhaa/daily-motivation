@@ -42,4 +42,19 @@ export class InMemoryMotivationRepository implements MotivationRepository {
         params.page * params.limitPerPage,
       );
   }
+
+  async findByAuthorId(
+    authorId: string,
+    params: Required<FetchDataParams>,
+  ): Promise<Motivation[] | null> {
+    return (
+      this.motivations
+        .filter((motivation) => motivation.authorId.toString() === authorId)
+        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+        .slice(
+          (params.page - 1) * params.limitPerPage,
+          params.page * params.limitPerPage,
+        ) || null
+    );
+  }
 }

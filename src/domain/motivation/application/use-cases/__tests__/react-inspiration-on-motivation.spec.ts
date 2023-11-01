@@ -1,4 +1,5 @@
 import { makeMotivation } from "@tests/factories/make-motivation";
+import { makeMotivationalParticipant } from "@tests/factories/make-motivational-participant";
 import { InMemoryMotivationRepository } from "@tests/repositories/in-memory-motivation-repository";
 import { InMemoryReactRepository } from "@tests/repositories/in-memory-react-repository";
 import { InMemoryReactionRepository } from "@tests/repositories/in-memory-reaction-repository";
@@ -70,18 +71,18 @@ describe("ReactInspirationOnMotivationUseCase", () => {
   it("should not be able to react inspiration if your already reacted", async () => {
     const motivation = makeMotivation();
 
-    const peopleInspired = new UniqueEntityID();
+    const motivationalParticipant = makeMotivationalParticipant();
 
     await inMemoryMotivationRepository.create(motivation);
 
     await sut.execute({
-      authorId: peopleInspired.toString(),
+      authorId: motivationalParticipant.id.toString(),
       motivationId: motivation.id.toString(),
     });
 
     await expect(() =>
       sut.execute({
-        authorId: peopleInspired.toString(),
+        authorId: motivationalParticipant.id.toString(),
         motivationId: motivation.id.toString(),
       }),
     ).rejects.toThrowError("You already reacted on this motivation");

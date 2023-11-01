@@ -1,8 +1,6 @@
 import { makeMotivation } from "@tests/factories/make-motivation";
 import { InMemoryMotivationRepository } from "@tests/repositories/in-memory-motivation-repository";
 
-import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
-
 import { GetMotivationByIdUseCase } from "../get-motivation-by-id";
 
 let inMemoryMotivationRepository: InMemoryMotivationRepository;
@@ -27,11 +25,11 @@ describe("GetMotivationByIdUseCase", () => {
       throw new Error("Motivation not found");
     }
 
-    expect(motivation.id).toEqual(newMotivation.id);
-    expect(motivation.content).toEqual(newMotivation.content);
-    expect(motivation.authorId).toEqual(
-      new UniqueEntityID(newMotivation.authorId.toString()),
-    );
+    expect(motivation).toMatchObject({
+      content: newMotivation.content,
+      authorId: newMotivation.authorId,
+      id: newMotivation.id,
+    });
   });
 
   it("should not be able to get a motivation if the doesn't exist", async () => {

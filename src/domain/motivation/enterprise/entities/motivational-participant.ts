@@ -3,13 +3,13 @@ import { DateAt } from "@core/types/date-at";
 import { Optional } from "@core/types/optional";
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
-export interface MotivatorProps extends DateAt {
-  name: string;
+export interface MotivationalParticipantProps extends DateAt {
+  surname: string;
 }
 
-export class Motivator extends Entity<MotivatorProps> {
-  get name(): string {
-    return this.props.name;
+export class MotivationalParticipant extends Entity<MotivationalParticipantProps> {
+  get surname(): string {
+    return this.props.surname;
   }
 
   get createdAt(): Date {
@@ -25,9 +25,9 @@ export class Motivator extends Entity<MotivatorProps> {
   }
 
   static create(
-    props: Optional<MotivatorProps, "createdAt">,
+    props: Optional<MotivationalParticipantProps, "createdAt">,
     id?: UniqueEntityID,
   ) {
-    return new Motivator({ ...props, createdAt: new Date() }, id);
+    return new MotivationalParticipant({ ...props, createdAt: new Date() }, id);
   }
 }
