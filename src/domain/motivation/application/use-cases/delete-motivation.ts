@@ -1,5 +1,7 @@
 import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
 
+import { MotivationalParticipantRepository } from "../repositories/motivational-participant";
+
 export interface DeleteMotivationRequest {
   authorId: string;
   motivationId: string;
@@ -8,7 +10,10 @@ export interface DeleteMotivationRequest {
 interface DeleteMotivationResponse {}
 
 export class DeleteMotivationUseCase {
-  constructor(private motivationRepository: MotivationRepository) {}
+  constructor(
+    private motivationRepository: MotivationRepository,
+    private motivationalParticipantRepository: MotivationalParticipantRepository,
+  ) {}
 
   async execute({
     authorId,
@@ -20,7 +25,14 @@ export class DeleteMotivationUseCase {
       throw new Error("Motivation not found");
     }
 
-    if (motivation.authorId.toString() !== authorId) {
+    const author =
+      await this.motivationalParticipantRepository.findById(authorId);
+
+    if (!author) {
+      throw new Error("Author not found");
+    }
+
+    if (motivation.authorId !== author.id && !author.isAdmin()) {
       throw new Error("Not allowed to delete this motivation");
     }
 
