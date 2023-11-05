@@ -22,7 +22,6 @@ export class CreateMotivationUseCase {
     const motivation = Motivation.create({
       content,
       authorId: new UniqueEntityID(authorId),
-      dailyMotivation: null,
     });
 
     await this.motivationRepository.create(motivation);

@@ -52,11 +52,13 @@ export class Motivation extends Entity<MotivationProps> {
   }
 
   static create(
-    props: Optional<MotivationProps, "createdAt">,
+    props: Optional<MotivationProps, "createdAt" | "dailyMotivation">,
     id?: UniqueEntityID,
   ) {
+    const dailyMotivation = props.dailyMotivation || null;
+
     return new Motivation(
-      { ...props, createdAt: props.createdAt || new Date() },
+      { ...props, createdAt: props.createdAt || new Date(), dailyMotivation },
       id,
     );
   }
