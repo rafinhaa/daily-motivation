@@ -5,6 +5,7 @@ import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
 export interface MotivationProps extends DateAt {
   content: string;
+  dailyMotivation: Date | null;
   authorId: UniqueEntityID;
 }
 
@@ -36,6 +37,18 @@ export class Motivation extends Entity<MotivationProps> {
   set content(content: string) {
     this.props.content = content;
     this.touch();
+  }
+
+  get dailyMotivation(): Date | null | undefined {
+    return this.props.dailyMotivation;
+  }
+
+  setDailyMotivation() {
+    this.props.dailyMotivation = new Date();
+  }
+
+  removeDailyMotivation() {
+    this.props.dailyMotivation = null;
   }
 
   static create(

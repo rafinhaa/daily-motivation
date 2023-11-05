@@ -22,3 +22,4 @@
 - [x] Um participante motivacional pode olhar as suas motivações recentes
       -- [x] Um participante motivacional pode personalizar a quantidade de motivações na listagem
       -- [ ] Um participante motivacional deve saber quantas páginas tem no total
+- [x] Deve exibir uma motivation aleatória por dia

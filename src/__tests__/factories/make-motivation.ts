@@ -15,6 +15,7 @@ export const makeMotivation = (
       content: faker.lorem.text(),
       authorId: new UniqueEntityID(faker.string.uuid()),
       createdAt: faker.date.past(),
+      dailyMotivation: null,
       ...overrides,
     },
     id,

@@ -55,4 +55,18 @@ export class InMemoryMotivationRepository implements MotivationRepository {
         params.page * params.limitPerPage,
       );
   }
+
+  async getDailyMotivation(): Promise<Motivation | null> {
+    return (
+      this.motivations.find(
+        (motivation) => motivation.dailyMotivation !== null,
+      ) || null
+    );
+  }
+
+  async getNewDailyMotivation(): Promise<Motivation> {
+    return this.motivations[
+      Math.floor(Math.random() * this.motivations.length)
+    ];
+  }
 }

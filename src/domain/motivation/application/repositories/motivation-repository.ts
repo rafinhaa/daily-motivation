@@ -12,4 +12,6 @@ export interface MotivationRepository {
     authorId: string,
     params: Required<FetchDataParams>,
   ): Promise<Motivation[]>;
+  getDailyMotivation(): Promise<Motivation | null>;
+  getNewDailyMotivation(): Promise<Motivation>;
 }
