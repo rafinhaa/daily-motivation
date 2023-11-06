@@ -2,6 +2,8 @@ import { MotivationRepository } from "@motivation/application/repositories/motiv
 import { Motivation } from "@motivation/enterprise/entities/motivation";
 
 import { constants } from "@core/constants";
+import { right } from "@core/either";
+import { Either } from "@core/types/either";
 import { FetchDataParams } from "@core/types/fetch-data";
 import { Optional } from "@core/types/optional";
 
@@ -10,9 +12,12 @@ export interface FetchRecentMotivationsByAuthorIdRequest
   authorId: string;
 }
 
-interface FetchRecentMotivationsByAuthorIdResponse {
-  motivations: Motivation[];
-}
+type FetchRecentMotivationsByAuthorIdResponse = Either<
+  null,
+  {
+    motivations: Motivation[];
+  }
+>;
 
 export class FetchRecentMotivationsByAuthorIdUseCase {
   constructor(private motivationRepository: MotivationRepository) {}
@@ -28,6 +33,6 @@ export class FetchRecentMotivationsByAuthorIdUseCase {
         limitPerPage,
       });
 
-    return { motivations };
+    return right({ motivations });
   }
 }

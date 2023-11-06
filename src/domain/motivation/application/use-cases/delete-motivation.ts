@@ -1,13 +1,20 @@
 import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
 
+import { left, right } from "@core/either";
+import { Either } from "@core/types/either";
+
 import { MotivationalParticipantRepository } from "../repositories/motivational-participant";
+import { NotAllowedError, ResourceNotFoundError } from "./errors";
 
 export interface DeleteMotivationRequest {
   authorId: string;
   motivationId: string;
 }
 
-interface DeleteMotivationResponse {}
+type DeleteMotivationResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  null
+>;
 
 export class DeleteMotivationUseCase {
   constructor(
@@ -22,22 +29,22 @@ export class DeleteMotivationUseCase {
     const motivation = await this.motivationRepository.findById(motivationId);
 
     if (!motivation) {
-      throw new Error("Motivation not found");
+      return left(new ResourceNotFoundError("Motivation not found"));
     }
 
     const author =
       await this.motivationalParticipantRepository.findById(authorId);
 
     if (!author) {
-      throw new Error("Author not found");
+      return left(new ResourceNotFoundError("Author not found"));
     }
 
     if (motivation.authorId !== author.id && !author.isAdmin()) {
-      throw new Error("Not allowed to delete this motivation");
+      return left(new NotAllowedError("Not allowed to delete this motivation"));
     }
 
     await this.motivationRepository.delete(motivation);
 
-    return {};
+    return right(null);
   }
 }

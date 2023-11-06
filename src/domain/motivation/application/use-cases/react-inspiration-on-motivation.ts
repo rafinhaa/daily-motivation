@@ -1,19 +1,25 @@
 import { React } from "@motivation/enterprise/entities/react";
 
+import { left, right } from "@core/either";
+import { Either } from "@core/types/either";
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
 import { MotivationRepository } from "../repositories/motivation-repository";
 import { ReactRepository } from "../repositories/react-repository";
 import { ReactionRepository } from "../repositories/reaction-repository";
+import { NotAllowedError, ResourceNotFoundError } from "./errors";
 
 export interface ReactOnMotivationRequest {
   authorId: string;
   motivationId: string;
 }
 
-interface ReactOnMotivationResponse {
-  react: React;
-}
+type ReactOnMotivationResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  {
+    react: React;
+  }
+>;
 
 export class ReactInspirationOnMotivationUseCase {
   constructor(
@@ -29,23 +35,27 @@ export class ReactInspirationOnMotivationUseCase {
     const motivation = await this.motivationRepository.findById(motivationId);
 
     if (!motivation) {
-      throw new Error("Motivation not found");
+      return left(new ResourceNotFoundError("Motivation not found"));
     }
 
     if (motivation.authorId.toString() === authorId) {
-      throw new Error("You cannot react on your own motivation");
+      return left(
+        new NotAllowedError("You cannot react on your own motivation"),
+      );
     }
 
     const reaction = await this.reactionRepository.findInspiration();
 
     if (!reaction) {
-      throw new Error("Reaction not found");
+      return left(new ResourceNotFoundError("Reaction not found"));
     }
 
     const hasReaction = await this.reactRepository.findByAuthorId(authorId);
 
     if (hasReaction) {
-      throw new Error("You already reacted on this motivation");
+      return left(
+        new NotAllowedError("You already reacted on this motivation"),
+      );
     }
 
     const react = React.create({
@@ -56,6 +66,6 @@ export class ReactInspirationOnMotivationUseCase {
 
     await this.reactRepository.create(react);
 
-    return { react };
+    return right({ react });
   }
 }

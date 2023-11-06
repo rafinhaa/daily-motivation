@@ -3,6 +3,7 @@ import { InMemoryMotivationRepository } from "@tests/repositories/in-memory-moti
 
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
+import { ResourceNotFoundError } from "../errors";
 import { GetDailyMotivationByIdUseCase } from "../get-daily-motivation";
 
 let sut: GetDailyMotivationByIdUseCase;
@@ -41,32 +42,39 @@ describe("GetDailyMotivationByIdUseCase", () => {
   it("should be able to get daily motivation", async () => {
     vi.setSystemTime(TODAY);
 
-    const { motivation } = await sut.execute();
+    const result = await sut.execute();
 
-    const { motivation: sameMotivation } = await sut.execute();
+    const sameResult = await sut.execute();
 
-    expect(motivation).toEqual(dailyMotivation);
-    expect(sameMotivation).toEqual(dailyMotivation);
+    expect(result.isRight()).toBe(true);
+    expect(sameResult.isRight()).toBe(true);
+
+    if (!result.isRight() || !sameResult.isRight()) {
+      throw new Error();
+    }
+
+    expect(result.value.motivation).toEqual(dailyMotivation);
+    expect(sameResult.value.motivation).toEqual(dailyMotivation);
   });
 
   it("should be able to get a new daily motivation", async () => {
-    const { motivation: previousMotivation } = await sut.execute();
+    const previousResult = await sut.execute();
 
-    if (!previousMotivation) {
-      throw new Error("Motivation not found");
-    }
+    expect(previousResult.isRight()).toBe(true);
 
     vi.setSystemTime(TOMORROW);
 
-    const { motivation } = await sut.execute();
+    const result = await sut.execute();
 
-    if (!motivation) {
-      throw new Error("Motivation not found");
+    if (!result.isRight() || !previousResult.isRight()) {
+      throw result.value;
     }
 
-    expect(previousMotivation.id).equal(dailyMotivation.id);
+    expect(previousResult.value.motivation.id).equal(dailyMotivation.id);
 
-    expect(motivation.id.toString()).not.toEqual(dailyMotivation.id.toString());
+    expect(result.value.motivation.id.toString()).not.toEqual(
+      dailyMotivation.id.toString(),
+    );
   });
 });
 
@@ -82,8 +90,12 @@ describe("GetDailyMotivationByIdUseCase Throw Error", () => {
   });
 
   it("should not be able to get daily if the doesn't exist", async () => {
-    await expect(() => sut.execute()).rejects.toThrowError(
-      "Daily motivation not found",
-    );
+    const result = await sut.execute();
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+    expect(result.value).toMatchObject({
+      message: "Daily motivation not found",
+    });
   });
 });

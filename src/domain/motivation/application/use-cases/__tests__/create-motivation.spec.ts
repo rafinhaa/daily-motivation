@@ -18,21 +18,26 @@ describe("CreateMotivationUseCase", () => {
     const motivationalParticipant = makeMotivationalParticipant();
     const content = "motivation";
 
-    const { motivation } = await sut.execute({
+    const result = await sut.execute({
       authorId: motivationalParticipant.id.toString(),
       content,
     });
 
-    expect(motivation).toMatchObject({
+    expect(result.isRight()).toBe(true);
+    if (result.isLeft()) throw result.value;
+
+    expect(result.value.motivation).toMatchObject({
       content,
       authorId: motivationalParticipant.id,
-      createdAt: motivation.createdAt,
+      createdAt: result.value.motivation.createdAt,
       id: expect.any(UniqueEntityID),
     });
 
-    expect(motivation.id).toBeInstanceOf(UniqueEntityID);
-    expect(motivation.content).toEqual(content);
-    expect(motivation.authorId).toEqual(motivationalParticipant.id);
+    expect(result.value.motivation.id).toBeInstanceOf(UniqueEntityID);
+    expect(result.value.motivation.content).toEqual(content);
+    expect(result.value.motivation.authorId).toEqual(
+      motivationalParticipant.id,
+    );
   });
 
   it("should be able to create many motivations", async () => {

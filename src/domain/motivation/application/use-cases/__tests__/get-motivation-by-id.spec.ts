@@ -1,6 +1,7 @@
 import { makeMotivation } from "@tests/factories/make-motivation";
 import { InMemoryMotivationRepository } from "@tests/repositories/in-memory-motivation-repository";
 
+import { ResourceNotFoundError } from "../errors";
 import { GetMotivationByIdUseCase } from "../get-motivation-by-id";
 
 let inMemoryMotivationRepository: InMemoryMotivationRepository;
@@ -17,15 +18,17 @@ describe("GetMotivationByIdUseCase", () => {
 
     await inMemoryMotivationRepository.create(newMotivation);
 
-    const { motivation } = await sut.execute({
+    const result = await sut.execute({
       motivationId: newMotivation.id.toString(),
     });
 
-    if (!motivation) {
-      throw new Error("Motivation not found");
+    expect(result.isRight()).toBe(true);
+
+    if (!result.isRight()) {
+      throw result.value;
     }
 
-    expect(motivation).toMatchObject({
+    expect(result.value.motivation).toMatchObject({
       content: newMotivation.content,
       authorId: newMotivation.authorId,
       id: newMotivation.id,
@@ -33,8 +36,14 @@ describe("GetMotivationByIdUseCase", () => {
   });
 
   it("should not be able to get a motivation if the doesn't exist", async () => {
-    await expect(() =>
-      sut.execute({ motivationId: "unknown" }),
-    ).rejects.toThrowError();
+    const result = await sut.execute({
+      motivationId: "unknown",
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+    expect(result.value).toMatchObject({
+      message: "Motivation not found",
+    });
   });
 });

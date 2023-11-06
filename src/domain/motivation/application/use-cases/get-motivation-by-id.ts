@@ -1,13 +1,19 @@
 import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
 import { Motivation } from "@motivation/enterprise/entities/motivation";
 
+import { left, right } from "@core/either";
+import { Either } from "@core/types/either";
+
+import { ResourceNotFoundError } from "./errors";
+
 export interface GetMotivationRequest {
   motivationId: string;
 }
 
-interface GetMotivationResponse {
-  motivation: Motivation | null;
-}
+type GetMotivationResponse = Either<
+  ResourceNotFoundError,
+  { motivation: Motivation }
+>;
 
 export class GetMotivationByIdUseCase {
   constructor(private motivationRepository: MotivationRepository) {}
@@ -18,9 +24,9 @@ export class GetMotivationByIdUseCase {
     const motivation = await this.motivationRepository.findById(motivationId);
 
     if (!motivation) {
-      throw new Error("Motivation not found");
+      return left(new ResourceNotFoundError("Motivation not found"));
     }
 
-    return { motivation };
+    return right({ motivation });
   }
 }

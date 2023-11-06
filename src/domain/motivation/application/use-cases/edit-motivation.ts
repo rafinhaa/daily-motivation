@@ -1,12 +1,20 @@
 import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
 
+import { left, right } from "@core/either";
+import { Either } from "@core/types/either";
+
+import { NotAllowedError, ResourceNotFoundError } from "./errors";
+
 export interface EditMotivationRequest {
   authorId: string;
   motivationId: string;
   content: string;
 }
 
-interface EditMotivationResponse {}
+type EditMotivationResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  null
+>;
 
 export class EditMotivationUseCase {
   constructor(private motivationRepository: MotivationRepository) {}
@@ -19,17 +27,17 @@ export class EditMotivationUseCase {
     const motivation = await this.motivationRepository.findById(motivationId);
 
     if (!motivation) {
-      throw new Error("Motivation not found");
+      return left(new ResourceNotFoundError("Motivation not found"));
     }
 
     if (motivation.authorId.toString() !== authorId) {
-      throw new Error("Not allowed to edit this motivation");
+      return left(new NotAllowedError("Not allowed to edit this motivation"));
     }
 
     motivation.content = content;
 
     await this.motivationRepository.save(motivation);
 
-    return {};
+    return right(null);
   }
 }

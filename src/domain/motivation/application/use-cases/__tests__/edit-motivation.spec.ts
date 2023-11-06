@@ -5,6 +5,7 @@ import { InMemoryMotivationRepository } from "@tests/repositories/in-memory-moti
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
 import { EditMotivationUseCase } from "../edit-motivation";
+import { NotAllowedError, ResourceNotFoundError } from "../errors";
 
 let inMemoryMotivationRepository: InMemoryMotivationRepository;
 let sut: EditMotivationUseCase;
@@ -25,20 +26,20 @@ describe("EditMotivationUseCase", () => {
 
     const newContent = makeMotivation().content;
 
-    await expect(
-      sut.execute({
-        authorId: motivationalParticipant.id.toString(),
-        motivationId: newMotivation.id.toString(),
-        content: newContent,
-      }),
-    ).resolves.not.toThrow();
+    const result = await sut.execute({
+      authorId: motivationalParticipant.id.toString(),
+      motivationId: newMotivation.id.toString(),
+      content: newContent,
+    });
+
+    expect(result.isRight()).toBe(true);
 
     const updatedMotivation = await inMemoryMotivationRepository.findById(
       newMotivation.id.toString(),
     );
 
     if (!updatedMotivation) {
-      throw new Error("Motivation not found");
+      throw updatedMotivation;
     }
 
     expect(updatedMotivation).toMatchObject({
@@ -51,13 +52,17 @@ describe("EditMotivationUseCase", () => {
   it("should not be able to edit a motivation if the doesn't exist", async () => {
     const authorId = new UniqueEntityID();
 
-    await expect(() =>
-      sut.execute({
-        authorId: authorId.toString(),
-        motivationId: "unknown",
-        content: "any",
-      }),
-    ).rejects.toThrowError("Motivation not found");
+    const result = await sut.execute({
+      authorId: authorId.toString(),
+      motivationId: "unknown",
+      content: "any",
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+    expect(result.value).toMatchObject({
+      message: "Motivation not found",
+    });
   });
 
   it("should not be able to edit a motivation if authorId doesn't match", async () => {
@@ -68,12 +73,16 @@ describe("EditMotivationUseCase", () => {
 
     await inMemoryMotivationRepository.create(newMotivation);
 
-    await expect(() =>
-      sut.execute({
-        authorId: "another",
-        motivationId: newMotivation.id.toString(),
-        content: "any",
-      }),
-    ).rejects.toThrowError("Not allowed to edit this motivation");
+    const result = await sut.execute({
+      authorId: "another",
+      motivationId: newMotivation.id.toString(),
+      content: "any",
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotAllowedError);
+    expect(result.value).toMatchObject({
+      message: "Not allowed to edit this motivation",
+    });
   });
 });

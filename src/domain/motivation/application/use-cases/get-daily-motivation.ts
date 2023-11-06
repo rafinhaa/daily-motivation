@@ -1,12 +1,19 @@
 import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
 import { Motivation } from "@motivation/enterprise/entities/motivation";
 
+import { left, right } from "@core/either";
+import { Either } from "@core/types/either";
+
+import { ResourceNotFoundError } from "./errors";
+
 export interface GetDailyMotivationRequest {}
 
-interface GetDailyMotivationResponse {
-  motivation: Motivation | null;
-}
-
+type GetDailyMotivationResponse = Either<
+  ResourceNotFoundError,
+  {
+    motivation: Motivation;
+  }
+>;
 export class GetDailyMotivationByIdUseCase {
   constructor(private motivationRepository: MotivationRepository) {}
 
@@ -17,7 +24,7 @@ export class GetDailyMotivationByIdUseCase {
     const currentDay = currentDate.getDate();
 
     if (!existingMotivation || !existingMotivation.dailyMotivation)
-      throw new Error("Daily motivation not found");
+      return left(new ResourceNotFoundError("Daily motivation not found"));
 
     if (existingMotivation.dailyMotivation.getDate() !== currentDay) {
       existingMotivation.removeDailyMotivation();
@@ -29,11 +36,11 @@ export class GetDailyMotivationByIdUseCase {
       newDailyMotivation.setDailyMotivation();
       await this.motivationRepository.save(newDailyMotivation);
 
-      return {
+      return right({
         motivation: newDailyMotivation,
-      };
+      });
     }
 
-    return { motivation: existingMotivation };
+    return right({ motivation: existingMotivation });
   }
 }

@@ -27,12 +27,16 @@ describe("FetchRecentMotivationsUseCase", () => {
       );
     });
 
-    const { motivations } = await sut.execute();
+    const result = await sut.execute();
 
-    expect(motivations).toHaveLength(3);
-    expect(motivations[0].createdAt).toEqual(dates[2]);
-    expect(motivations[1].createdAt).toEqual(dates[1]);
-    expect(motivations[2].createdAt).toEqual(dates[0]);
+    if (!result.value) {
+      throw result.value;
+    }
+
+    expect(result.value.motivations).toHaveLength(3);
+    expect(result.value.motivations[0].createdAt).toEqual(dates[2]);
+    expect(result.value.motivations[1].createdAt).toEqual(dates[1]);
+    expect(result.value.motivations[2].createdAt).toEqual(dates[0]);
   });
 
   it("should be able to fetch paginate motivations", async () => {
@@ -47,11 +51,17 @@ describe("FetchRecentMotivationsUseCase", () => {
       );
     });
 
-    const { motivations } = await sut.execute({
+    const result = await sut.execute({
       page: 1,
     });
 
-    expect(motivations.length).toEqual(constants.LIMIT_PER_PAGE);
+    expect(result.isRight()).toBe(true);
+
+    if (!result.value) {
+      throw result.value;
+    }
+
+    expect(result.value.motivations.length).toEqual(constants.LIMIT_PER_PAGE);
   });
 
   it("should be able to fetch paginate motivations with limit", async () => {
@@ -63,11 +73,17 @@ describe("FetchRecentMotivationsUseCase", () => {
       );
     });
 
-    const { motivations } = await sut.execute({
+    const result = await sut.execute({
       page: 1,
       limitPerPage: 5,
     });
 
-    expect(motivations.length).toEqual(5);
+    expect(result.isRight()).toBe(true);
+
+    if (!result.value) {
+      throw result.value;
+    }
+
+    expect(result.value.motivations.length).toEqual(5);
   });
 });

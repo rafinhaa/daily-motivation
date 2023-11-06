@@ -2,13 +2,18 @@ import { MotivationRepository } from "@motivation/application/repositories/motiv
 import { Motivation } from "@motivation/enterprise/entities/motivation";
 
 import { constants } from "@core/constants";
+import { right } from "@core/either";
+import { Either } from "@core/types/either";
 import { FetchDataParams } from "@core/types/fetch-data";
 
 export interface FetchRecentMotivationsRequest extends FetchDataParams {}
 
-interface FetchRecentMotivationsResponse {
-  motivations: Motivation[];
-}
+type FetchRecentMotivationsResponse = Either<
+  null,
+  {
+    motivations: Motivation[];
+  }
+>;
 
 export class FetchRecentMotivationsUseCase {
   constructor(private motivationRepository: MotivationRepository) {}
@@ -22,6 +27,6 @@ export class FetchRecentMotivationsUseCase {
       limitPerPage,
     });
 
-    return { motivations };
+    return right({ motivations });
   }
 }

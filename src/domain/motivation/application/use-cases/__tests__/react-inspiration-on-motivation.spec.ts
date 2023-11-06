@@ -6,6 +6,7 @@ import { InMemoryReactionRepository } from "@tests/repositories/in-memory-reacti
 
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
+import { NotAllowedError, ResourceNotFoundError } from "../errors";
 import { ReactInspirationOnMotivationUseCase } from "../react-inspiration-on-motivation";
 
 let inMemoryMotivationRepository: InMemoryMotivationRepository;
@@ -32,12 +33,18 @@ describe("ReactInspirationOnMotivationUseCase", () => {
 
     await inMemoryMotivationRepository.create(motivation);
 
-    const { react } = await sut.execute({
+    const result = await sut.execute({
       authorId: peopleInspired.toString(),
       motivationId: motivation.id.toString(),
     });
 
-    expect(react).toMatchObject({
+    expect(result.isRight()).toBe(true);
+
+    if (!result.isRight()) {
+      throw result.value;
+    }
+
+    expect(result.value.react).toMatchObject({
       authorId: peopleInspired,
       motivationId: motivation.id,
       reaction: {
@@ -50,9 +57,16 @@ describe("ReactInspirationOnMotivationUseCase", () => {
   it("should not be able to react a motivation if the doesn't exist", async () => {
     const authorId = new UniqueEntityID();
 
-    await expect(() =>
-      sut.execute({ authorId: authorId.toString(), motivationId: "unknown" }),
-    ).rejects.toThrowError("Motivation not found");
+    const result = await sut.execute({
+      authorId: authorId.toString(),
+      motivationId: "unknown",
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+    expect(result.value).toMatchObject({
+      message: "Motivation not found",
+    });
   });
 
   it("should not be able to react a your motivation", async () => {
@@ -60,12 +74,16 @@ describe("ReactInspirationOnMotivationUseCase", () => {
 
     await inMemoryMotivationRepository.create(motivation);
 
-    await expect(() =>
-      sut.execute({
-        authorId: motivation.authorId.toString(),
-        motivationId: motivation.id.toString(),
-      }),
-    ).rejects.toThrowError("You cannot react on your own motivation");
+    const result = await sut.execute({
+      authorId: motivation.authorId.toString(),
+      motivationId: motivation.id.toString(),
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotAllowedError);
+    expect(result.value).toMatchObject({
+      message: "You cannot react on your own motivation",
+    });
   });
 
   it("should not be able to react inspiration if your already reacted", async () => {
@@ -80,11 +98,15 @@ describe("ReactInspirationOnMotivationUseCase", () => {
       motivationId: motivation.id.toString(),
     });
 
-    await expect(() =>
-      sut.execute({
-        authorId: motivationalParticipant.id.toString(),
-        motivationId: motivation.id.toString(),
-      }),
-    ).rejects.toThrowError("You already reacted on this motivation");
+    const result = await sut.execute({
+      authorId: motivationalParticipant.id.toString(),
+      motivationId: motivation.id.toString(),
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotAllowedError);
+    expect(result.value).toMatchObject({
+      message: "You already reacted on this motivation",
+    });
   });
 });

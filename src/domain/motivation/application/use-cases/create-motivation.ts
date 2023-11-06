@@ -1,6 +1,8 @@
 import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
 import { Motivation } from "@motivation/enterprise/entities/motivation";
 
+import { right } from "@core/either";
+import { Either } from "@core/types/either";
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
 export interface CreateMotivationRequest {
@@ -8,9 +10,7 @@ export interface CreateMotivationRequest {
   content: string;
 }
 
-interface CreateMotivationResponse {
-  motivation: Motivation;
-}
+type CreateMotivationResponse = Either<null, { motivation: Motivation }>;
 
 export class CreateMotivationUseCase {
   constructor(private motivationRepository: MotivationRepository) {}
@@ -26,6 +26,6 @@ export class CreateMotivationUseCase {
 
     await this.motivationRepository.create(motivation);
 
-    return { motivation };
+    return right({ motivation });
   }
 }

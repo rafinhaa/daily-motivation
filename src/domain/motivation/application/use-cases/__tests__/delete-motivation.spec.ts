@@ -6,6 +6,7 @@ import { InMemoryMotivationalParticipantRepository } from "@tests/repositories/i
 import { InMemoryRoleRepository } from "@tests/repositories/in-memory-role-repository";
 
 import { DeleteMotivationUseCase } from "../delete-motivation";
+import { NotAllowedError, ResourceNotFoundError } from "../errors";
 
 let inMemoryMotivationRepository: InMemoryMotivationRepository;
 let inMemoryMotivationalParticipantRepository: InMemoryMotivationalParticipantRepository;
@@ -52,12 +53,13 @@ describe("DeleteMotivationUseCase", () => {
       motivationalParticipant,
     );
 
-    await expect(() =>
-      sut.execute({
-        authorId: motivationalParticipant.id.toString(),
-        motivationId: "unknown",
-      }),
-    ).rejects.toThrowError("Motivation not found");
+    const result = await sut.execute({
+      authorId: motivationalParticipant.id.toString(),
+      motivationId: "unknown",
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
   });
 
   it("should not be able to delete a motivation if authorId doesn't match", async () => {
@@ -75,12 +77,16 @@ describe("DeleteMotivationUseCase", () => {
 
     await inMemoryMotivationRepository.create(newMotivation);
 
-    await expect(() =>
-      sut.execute({
-        authorId: anotherParticipant.id.toString(),
-        motivationId: newMotivation.id.toString(),
-      }),
-    ).rejects.toThrowError("Not allowed to delete this motivation");
+    const result = await sut.execute({
+      authorId: anotherParticipant.id.toString(),
+      motivationId: newMotivation.id.toString(),
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotAllowedError);
+    expect(result.value).toMatchObject({
+      message: "Not allowed to delete this motivation",
+    });
   });
 
   it("should not be able to delete a motivation if author doesn't exist", async () => {
@@ -96,12 +102,16 @@ describe("DeleteMotivationUseCase", () => {
 
     await inMemoryMotivationRepository.create(newMotivation);
 
-    await expect(() =>
-      sut.execute({
-        authorId: "another",
-        motivationId: newMotivation.id.toString(),
-      }),
-    ).rejects.toThrowError("Author not found");
+    const result = await sut.execute({
+      authorId: "another",
+      motivationId: newMotivation.id.toString(),
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+    expect(result.value).toMatchObject({
+      message: "Author not found",
+    });
   });
 
   it("should be able to delete a motivation if motivational participant is admin", async () => {
@@ -127,11 +137,11 @@ describe("DeleteMotivationUseCase", () => {
 
     await inMemoryMotivationRepository.create(newMotivation);
 
-    await expect(
-      sut.execute({
-        authorId: motivationalParticipantAdmin.id.toString(),
-        motivationId: newMotivation.id.toString(),
-      }),
-    ).resolves.not.toThrow();
+    const result = await sut.execute({
+      authorId: motivationalParticipantAdmin.id.toString(),
+      motivationId: newMotivation.id.toString(),
+    });
+
+    expect(result.isRight()).toBe(true);
   });
 });
