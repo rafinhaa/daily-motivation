@@ -3,8 +3,8 @@ import { Motivation } from "@motivation/enterprise/entities/motivation";
 
 import { constants } from "@core/constants";
 import { right } from "@core/either";
-import { Either } from "@core/types/either";
-import { FetchDataParams } from "@core/types/fetch-data";
+import { Either } from "@core/types";
+import { FetchDataParams } from "@core/types";
 import { Optional } from "@core/types/optional";
 
 export interface FetchRecentMotivationsByAuthorIdRequest

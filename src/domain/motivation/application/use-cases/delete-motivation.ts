@@ -1,7 +1,7 @@
 import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
 
 import { left, right } from "@core/either";
-import { Either } from "@core/types/either";
+import { Either } from "@core/types";
 
 import { MotivationalParticipantRepository } from "../repositories/motivational-participant";
 import { NotAllowedError, ResourceNotFoundError } from "./errors";

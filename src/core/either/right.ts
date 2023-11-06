@@ -1,4 +1,4 @@
-import { Either } from "@core/types/either";
+import { Either } from "@core/types";
 
 import { Left } from ".";
 

@@ -1,7 +1,7 @@
 import { React } from "@motivation/enterprise/entities/react";
 
 import { left, right } from "@core/either";
-import { Either } from "@core/types/either";
+import { Either } from "@core/types";
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
 import { MotivationRepository } from "../repositories/motivation-repository";

@@ -1,6 +1,6 @@
 import { Motivation } from "@motivation/enterprise/entities/motivation";
 
-import { FetchDataParams } from "@core/types/fetch-data";
+import { FetchDataParams } from "@core/types";
 
 export interface MotivationRepository {
   create(motivation: Motivation): Promise<void>;

@@ -2,7 +2,7 @@ import { MotivationRepository } from "@motivation/application/repositories/motiv
 import { Motivation } from "@motivation/enterprise/entities/motivation";
 
 import { left, right } from "@core/either";
-import { Either } from "@core/types/either";
+import { Either } from "@core/types";
 
 import { ResourceNotFoundError } from "./errors";
 

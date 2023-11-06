@@ -1,6 +1,5 @@
 import { Entity } from "@core/entities/entity";
-import { DateAt } from "@core/types/date-at";
-import { Optional } from "@core/types/optional";
+import { DateAt, Optional } from "@core/types";
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
 import { Reaction } from "./reaction";

@@ -1,7 +1,7 @@
 import { MotivationRepository } from "@motivation/application/repositories/motivation-repository";
 import { Motivation } from "@motivation/enterprise/entities/motivation";
 
-import { FetchDataParams } from "@core/types/fetch-data";
+import { FetchDataParams } from "@core/types";
 
 export class InMemoryMotivationRepository implements MotivationRepository {
   private motivations: Motivation[] = [];
