@@ -32,4 +32,20 @@ export class InMemoryMotivationalParticipantRepository
 
     return motivationalParticipant;
   }
+
+  async findByEmail(email: string): Promise<MotivationalParticipant | null> {
+    const motivationalParticipant = this.motivationalParticipants.find(
+      (motivation) => motivation.email === email,
+    );
+
+    if (!motivationalParticipant) return null;
+
+    const role = await this.roleRepository.getRoleByType(
+      motivationalParticipant.role.type,
+    );
+
+    motivationalParticipant.role = role;
+
+    return motivationalParticipant || null;
+  }
 }

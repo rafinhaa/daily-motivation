@@ -13,6 +13,8 @@ export const makeMotivationalParticipant = (
   return MotivationalParticipant.create(
     {
       surname: faker.person.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
       ...overrides,
     },
     id,

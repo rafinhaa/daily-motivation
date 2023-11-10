@@ -6,12 +6,22 @@ import { Role } from "./role";
 
 export interface MotivationalParticipantProps extends DateAt {
   surname: string;
+  email: string;
+  password: string;
   role: Role;
 }
 
 export class MotivationalParticipant extends Entity<MotivationalParticipantProps> {
   get surname(): string {
     return this.props.surname;
+  }
+
+  get email(): string {
+    return this.props.email;
+  }
+
+  get password(): string {
+    return this.props.password;
   }
 
   get role(): Role {

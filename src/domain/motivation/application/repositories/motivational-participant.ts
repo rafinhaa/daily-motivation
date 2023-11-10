@@ -5,4 +5,5 @@ export interface MotivationalParticipantRepository {
   findById(
     motivationalParticipantId: string,
   ): Promise<MotivationalParticipant | null>;
+  findByEmail(email: string): Promise<MotivationalParticipant | null>;
 }
