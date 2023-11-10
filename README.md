@@ -29,8 +29,10 @@
 - [x] Um participante motivacional pode criar uma conta
       -- [ ] Um participante motivacional pode ter cargos de administrador, moderador ou membro
       -- [x] Por padrão um novo participante motivacional deve ter um cargo de membro
-      -- [ ] Um administrador pode promover um membro para moderador
-      -- [ ] Um administrador pode rebaixar um moderador para membro
+      -- [x] Somente um administrador ou moderador pode promover um membro para moderador
+      -- [ ] Somente um administrador pode rebaixar um moderador para membro
+      -- [ ] Um administrador não pode ser rebaixado a moderador
+      -- [ ] Um moderador não pode rebaixar outro moderador
       -- [x] Um administrador pode apagar motivações de um participante motivacional
       -- [ ] Um moderador pode apagar motivações de um participante motivacional
       -- [ ] A senha deve ser protegia por hash

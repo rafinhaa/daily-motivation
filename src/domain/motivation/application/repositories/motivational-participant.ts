@@ -6,4 +6,5 @@ export interface MotivationalParticipantRepository {
     motivationalParticipantId: string,
   ): Promise<MotivationalParticipant | null>;
   findByEmail(email: string): Promise<MotivationalParticipant | null>;
+  save(motivationalParticipant: MotivationalParticipant): Promise<void>;
 }

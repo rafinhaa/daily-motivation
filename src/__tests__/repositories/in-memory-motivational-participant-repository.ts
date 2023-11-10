@@ -48,4 +48,12 @@ export class InMemoryMotivationalParticipantRepository
 
     return motivationalParticipant || null;
   }
+
+  async save(motivationalParticipant: MotivationalParticipant): Promise<void> {
+    const index = this.motivationalParticipants.findIndex(
+      (motivation) => motivation.id === motivationalParticipant.id,
+    );
+
+    this.motivationalParticipants[index] = motivationalParticipant;
+  }
 }
