@@ -24,6 +24,10 @@ export class MotivationalParticipant extends Entity<MotivationalParticipantProps
     return this.props.password;
   }
 
+  get role(): Role {
+    return this.props.role;
+  }
+
   set role(role: Role) {
     this.props.role = role;
     this.touch();
@@ -60,6 +64,13 @@ export class MotivationalParticipant extends Entity<MotivationalParticipantProps
   promoteToModerator() {
     this.role = Role.create({
       type: "moderator",
+    });
+    this.touch();
+  }
+
+  demoteToMember() {
+    this.role = Role.create({
+      type: "member",
     });
     this.touch();
   }
