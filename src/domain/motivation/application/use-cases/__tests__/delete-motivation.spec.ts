@@ -142,4 +142,33 @@ describe("DeleteMotivationUseCase", () => {
 
     expect(result.isRight()).toBe(true);
   });
+
+  it("should be able to delete a motivation if motivational participant is moderator", async () => {
+    const motivationalParticipantModerator = makeMotivationalParticipant({
+      role: Role.createModerator(),
+    });
+
+    const motivationalParticipant = makeMotivationalParticipant();
+
+    await inMemoryMotivationalParticipantRepository.create(
+      motivationalParticipantModerator,
+    );
+
+    await inMemoryMotivationalParticipantRepository.create(
+      motivationalParticipant,
+    );
+
+    const newMotivation = makeMotivation({
+      authorId: motivationalParticipant.id,
+    });
+
+    await inMemoryMotivationRepository.create(newMotivation);
+
+    const result = await sut.execute({
+      authorId: motivationalParticipantModerator.id.toString(),
+      motivationId: newMotivation.id.toString(),
+    });
+
+    expect(result.isRight()).toBe(true);
+  });
 });

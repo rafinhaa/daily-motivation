@@ -27,12 +27,12 @@
       -- [ ] Um participante motivacional deve saber quantas páginas tem no total
 - [x] Deve exibir uma motivation aleatória por dia
 - [x] Um participante motivacional pode criar uma conta
-      -- [ ] Um participante motivacional pode ter cargos de administrador, moderador ou membro
+      -- [x] Um participante motivacional pode ter cargos de administrador, moderador ou membro
       -- [x] Por padrão um novo participante motivacional deve ter um cargo de membro
       -- [x] Somente um administrador ou moderador pode promover um membro para moderador
       -- [x] Somente um administrador pode rebaixar um moderador para membro
       -- [x] Um administrador não pode ser rebaixado a moderador
       -- [x] Um administrador pode apagar motivações de um participante motivacional
-      -- [ ] Um moderador pode apagar motivações de um participante motivacional
+      -- [x] Um moderador pode apagar motivações de um participante motivacional
       -- [ ] A senha deve ser protegia por hash
       -- [x] O email deve ser único

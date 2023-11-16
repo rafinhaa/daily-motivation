@@ -39,7 +39,10 @@ export class DeleteMotivationUseCase {
       return left(new ResourceNotFoundError("Author not found"));
     }
 
-    if (motivation.authorId !== author.id && !author.isAdmin()) {
+    if (
+      motivation.authorId !== author.id &&
+      !author.hasPermissionToDeleteMotivation()
+    ) {
       return left(new NotAllowedError("Not allowed to delete this motivation"));
     }
 

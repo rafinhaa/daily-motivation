@@ -60,6 +60,12 @@ export class MotivationalParticipant extends Entity<MotivationalParticipantProps
     );
   }
 
+  hasPermissionToDeleteMotivation(): boolean {
+    return (
+      this.role.type === RoleType.admin || this.role.type === RoleType.moderator
+    );
+  }
+
   getOffice() {
     return this.role.type;
   }
