@@ -1,4 +1,4 @@
-import { Role } from "@motivation/enterprise/entities/role";
+import { Role } from "@motivation/enterprise/entities/value-objects/role";
 import { makeMotivation } from "@tests/factories/make-motivation";
 import { makeMotivationalParticipant } from "@tests/factories/make-motivational-participant";
 import { InMemoryMotivationRepository } from "@tests/repositories/in-memory-motivation-repository";
@@ -116,9 +116,7 @@ describe("DeleteMotivationUseCase", () => {
 
   it("should be able to delete a motivation if motivational participant is admin", async () => {
     const motivationalParticipantAdmin = makeMotivationalParticipant({
-      role: Role.create({
-        type: "admin",
-      }),
+      role: Role.createAdmin(),
     });
 
     const motivationalParticipant = makeMotivationalParticipant();

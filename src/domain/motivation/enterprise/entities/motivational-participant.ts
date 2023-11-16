@@ -1,8 +1,9 @@
 import { Entity } from "@core/entities/entity";
 import { DateAt, Optional } from "@core/types";
+import { RoleType } from "@core/types/role";
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 
-import { Role } from "./role";
+import { Role } from "./value-objects/role";
 
 export interface MotivationalParticipantProps extends DateAt {
   surname: string;
@@ -50,11 +51,13 @@ export class MotivationalParticipant extends Entity<MotivationalParticipantProps
   }
 
   isAdmin(): boolean {
-    return this.role.type === "admin";
+    return this.role.type === RoleType.admin;
   }
 
   hasPermissionToPromoteToModerator(): boolean {
-    return this.role.type === "admin" || this.role.type === "moderator";
+    return (
+      this.role.type === RoleType.admin || this.role.type === RoleType.moderator
+    );
   }
 
   getOffice() {
@@ -62,16 +65,12 @@ export class MotivationalParticipant extends Entity<MotivationalParticipantProps
   }
 
   promoteToModerator() {
-    this.role = Role.create({
-      type: "moderator",
-    });
+    this.role = Role.createModerator();
     this.touch();
   }
 
   demoteToMember() {
-    this.role = Role.create({
-      type: "member",
-    });
+    this.role = Role.createMember();
     this.touch();
   }
 
@@ -79,11 +78,7 @@ export class MotivationalParticipant extends Entity<MotivationalParticipantProps
     props: Optional<MotivationalParticipantProps, "createdAt" | "role">,
     id?: UniqueEntityID,
   ) {
-    const role =
-      props.role ||
-      Role.create({
-        type: "member",
-      });
+    const role = props.role || Role.createMember();
     const createdAt = props.createdAt || new Date();
 
     return new MotivationalParticipant({ ...props, createdAt, role }, id);

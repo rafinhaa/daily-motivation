@@ -1,5 +1,5 @@
 import { RoleRepository } from "@motivation/application/repositories/role-repository";
-import { Role } from "@motivation/enterprise/entities/role";
+import { Role } from "@motivation/enterprise/entities/value-objects/role";
 
 import { UniqueEntityID } from "@core/value-objects/unique-entity-id";
 

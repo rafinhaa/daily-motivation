@@ -1,4 +1,4 @@
-import { Role } from "@motivation/enterprise/entities/role";
+import { Role } from "@motivation/enterprise/entities/value-objects/role";
 import { makeMotivationalParticipant } from "@tests/factories/make-motivational-participant";
 import { InMemoryMotivationalParticipantRepository } from "@tests/repositories/in-memory-motivational-participant-repository";
 import { InMemoryRoleRepository } from "@tests/repositories/in-memory-role-repository";
@@ -22,14 +22,10 @@ describe("DemoteMotivationalParticipantToMemberUseCase", () => {
 
   it("should be able to admin demote a moderator to member", async () => {
     const admin = makeMotivationalParticipant({
-      role: Role.create({
-        type: "admin",
-      }),
+      role: Role.createAdmin(),
     });
     const moderator = makeMotivationalParticipant({
-      role: Role.create({
-        type: "moderator",
-      }),
+      role: Role.createModerator(),
     });
 
     await inMemoryMotivationalParticipantRepository.create(admin);
@@ -53,9 +49,7 @@ describe("DemoteMotivationalParticipantToMemberUseCase", () => {
 
   it("should not be able to demote a moderator to member if moderator not exists", async () => {
     const admin = makeMotivationalParticipant({
-      role: Role.create({
-        type: "admin",
-      }),
+      role: Role.createAdmin(),
     });
 
     await inMemoryMotivationalParticipantRepository.create(admin);
@@ -76,9 +70,7 @@ describe("DemoteMotivationalParticipantToMemberUseCase", () => {
 
   it("should not be able to demote a moderator to member if admin not exists", async () => {
     const moderator = makeMotivationalParticipant({
-      role: Role.create({
-        type: "moderator",
-      }),
+      role: Role.createModerator(),
     });
     await inMemoryMotivationalParticipantRepository.create(moderator);
 
@@ -98,14 +90,10 @@ describe("DemoteMotivationalParticipantToMemberUseCase", () => {
 
   it("should not be able to change member to member", async () => {
     const admin = makeMotivationalParticipant({
-      role: Role.create({
-        type: "admin",
-      }),
+      role: Role.createAdmin(),
     });
     const member = makeMotivationalParticipant({
-      role: Role.create({
-        type: "member",
-      }),
+      role: Role.createMember(),
     });
 
     await inMemoryMotivationalParticipantRepository.create(admin);
@@ -127,14 +115,10 @@ describe("DemoteMotivationalParticipantToMemberUseCase", () => {
 
   it("should not be able to change admin to member", async () => {
     const admin = makeMotivationalParticipant({
-      role: Role.create({
-        type: "admin",
-      }),
+      role: Role.createAdmin(),
     });
     const anotherAdmin = makeMotivationalParticipant({
-      role: Role.create({
-        type: "admin",
-      }),
+      role: Role.createAdmin(),
     });
 
     await inMemoryMotivationalParticipantRepository.create(admin);
@@ -156,14 +140,10 @@ describe("DemoteMotivationalParticipantToMemberUseCase", () => {
 
   it("should not be able a member demote another member to member", async () => {
     const member = makeMotivationalParticipant({
-      role: Role.create({
-        type: "member",
-      }),
+      role: Role.createMember(),
     });
     const anotherMember = makeMotivationalParticipant({
-      role: Role.create({
-        type: "member",
-      }),
+      role: Role.createMember(),
     });
 
     await inMemoryMotivationalParticipantRepository.create(member);
@@ -185,14 +165,10 @@ describe("DemoteMotivationalParticipantToMemberUseCase", () => {
 
   it("should not be able a moderator demote moderator to member", async () => {
     const moderator = makeMotivationalParticipant({
-      role: Role.create({
-        type: "moderator",
-      }),
+      role: Role.createModerator(),
     });
     const anotherModerator = makeMotivationalParticipant({
-      role: Role.create({
-        type: "moderator",
-      }),
+      role: Role.createModerator(),
     });
 
     await inMemoryMotivationalParticipantRepository.create(moderator);
