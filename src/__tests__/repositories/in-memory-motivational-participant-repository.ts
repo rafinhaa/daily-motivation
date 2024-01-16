@@ -5,7 +5,7 @@ import { MotivationalParticipant } from "@motivation/enterprise/entities/motivat
 export class InMemoryMotivationalParticipantRepository
   implements MotivationalParticipantRepository
 {
-  private motivationalParticipants: MotivationalParticipant[] = [];
+  motivationalParticipants: MotivationalParticipant[] = [];
 
   constructor(private roleRepository: RoleRepository) {}
 

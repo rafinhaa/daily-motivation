@@ -34,5 +34,5 @@
       -- [x] Um administrador não pode ser rebaixado a moderador
       -- [x] Um administrador pode apagar motivações de um participante motivacional
       -- [x] Um moderador pode apagar motivações de um participante motivacional
-      -- [ ] A senha deve ser protegia por hash
+      -- [x] A senha deve ser protegia por hash
       -- [x] O email deve ser único

@@ -3,6 +3,7 @@ import { MotivationalParticipant } from "@motivation/enterprise/entities/motivat
 import { left, right } from "@core/either";
 import { Either } from "@core/types";
 
+import { HashGenerator } from "../cryptography/hash-generator";
 import { MotivationalParticipantRepository } from "../repositories/motivational-participant";
 import { ConflictError } from "./errors/conflict-error";
 
@@ -20,6 +21,7 @@ type RegisterMotivationalParticipantResponse = Either<
 export class RegisterMotivationalParticipantUseCase {
   constructor(
     private motivationalParticipantRepository: MotivationalParticipantRepository,
+    private hashGenerator: HashGenerator,
   ) {}
 
   async execute({
@@ -34,9 +36,11 @@ export class RegisterMotivationalParticipantUseCase {
       return left(new ConflictError("Email already in use"));
     }
 
+    const hashedPassword = await this.hashGenerator.hash(password);
+
     const motivationalParticipant = MotivationalParticipant.create({
       surname,
-      password,
+      password: hashedPassword,
       email,
     });
 

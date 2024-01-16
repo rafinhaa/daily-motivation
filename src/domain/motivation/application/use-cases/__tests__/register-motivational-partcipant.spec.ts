@@ -1,3 +1,4 @@
+import { FakerCryptography } from "@tests/cryptography/faker-cryptography";
 import { makeMotivationalParticipant } from "@tests/factories/make-motivational-participant";
 import { InMemoryMotivationalParticipantRepository } from "@tests/repositories/in-memory-motivational-participant-repository";
 import { InMemoryRoleRepository } from "@tests/repositories/in-memory-role-repository";
@@ -10,14 +11,18 @@ import { RegisterMotivationalParticipantUseCase } from "../register-motivational
 let inMemoryMotivationParticipantRepository: InMemoryMotivationalParticipantRepository;
 let inMemoryRoleRepository: InMemoryRoleRepository;
 let sut: RegisterMotivationalParticipantUseCase;
+let fakerCryptography: FakerCryptography;
 
 describe("RegisterMotivationalParticipantUseCase", () => {
   beforeEach(() => {
     inMemoryRoleRepository = new InMemoryRoleRepository();
+    fakerCryptography = new FakerCryptography();
+
     inMemoryMotivationParticipantRepository =
       new InMemoryMotivationalParticipantRepository(inMemoryRoleRepository);
     sut = new RegisterMotivationalParticipantUseCase(
       inMemoryMotivationParticipantRepository,
+      fakerCryptography,
     );
   });
 
@@ -42,6 +47,26 @@ describe("RegisterMotivationalParticipantUseCase", () => {
         type: "member",
       }),
     });
+  });
+
+  it("should hash the password upon registration", async () => {
+    const motivationalParticipant = makeMotivationalParticipant();
+
+    const result = await sut.execute({
+      email: motivationalParticipant.email,
+      surname: motivationalParticipant.surname,
+      password: motivationalParticipant.password,
+    });
+
+    const hashedPassword = await fakerCryptography.hash(
+      motivationalParticipant.password,
+    );
+
+    expect(result.isRight()).toBe(true);
+    expect(
+      inMemoryMotivationParticipantRepository.motivationalParticipants[0]
+        .password,
+    ).toEqual(hashedPassword);
   });
 
   it("should not be able to register a motivational participant with an existing email", async () => {
